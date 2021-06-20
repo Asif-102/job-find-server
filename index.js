@@ -32,6 +32,14 @@ client.connect(err => {
         res.send('This is MERN Stack task');
     })
 
+    app.post('/addEmployer', (req, res) => {
+        const account = req.body;
+        employersAccount.insertOne(account)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+    })
+
 
 });
 
