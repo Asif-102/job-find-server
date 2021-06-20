@@ -27,6 +27,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
 
     const employersAccount = client.db(db).collection("employerAccount");
+    const adminAccount = client.db(db).collection("adminAccount");
 
     app.get('/', (req, res) => {
         res.send('This is MERN Stack task');
@@ -37,6 +38,22 @@ client.connect(err => {
         employersAccount.insertOne(account)
             .then(result => {
                 res.send(result.insertedCount > 0)
+            })
+    })
+
+    app.get('/findEmployer', (req, res) => {
+        const email = req.query.email;
+        employersAccount.find({ email: email })
+            .toArray((err, documents) => {
+                res.send(documents)
+            })
+    })
+
+    app.get('/findAdmin', (req, res) => {
+        const email = req.query.email;
+        adminAccount.find({ email: email })
+            .toArray((err, documents) => {
+                res.send(documents)
             })
     })
 
