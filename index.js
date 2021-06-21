@@ -45,7 +45,7 @@ client.connect(err => {
 
     app.get('/findEmployer', (req, res) => {
         const email = req.query.email;
-        employersAccount.find({ email: email })
+        employerPost.find({ email: email })
             .toArray((err, documents) => {
                 res.send(documents)
             })
@@ -61,6 +61,14 @@ client.connect(err => {
 
     app.get('/postedJob', (req, res) => {
         employerPost.find()
+            .toArray((err, documents) => {
+                res.send(documents)
+            })
+    })
+
+    app.get('/findEmployer', (req, res) => {
+        const email = req.query.email;
+        employerPost.find({email:email})
             .toArray((err, documents) => {
                 res.send(documents)
             })
