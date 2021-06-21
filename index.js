@@ -45,7 +45,7 @@ client.connect(err => {
 
     app.get('/findEmployer', (req, res) => {
         const email = req.query.email;
-        employerPost.find({ email: email })
+        employersAccount.find({ email: email })
             .toArray((err, documents) => {
                 res.send(documents)
             })
