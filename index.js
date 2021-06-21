@@ -28,6 +28,8 @@ client.connect(err => {
 
     const employersAccount = client.db(db).collection("employerAccount");
     const adminAccount = client.db(db).collection("adminAccount");
+    const employerPost = client.db(db).collection("employerPost");
+    const approvedJobs = client.db(db).collection("approvedJobs");
 
     app.get('/', (req, res) => {
         res.send('This is MERN Stack task');
@@ -55,6 +57,61 @@ client.connect(err => {
             .toArray((err, documents) => {
                 res.send(documents)
             })
+    })
+
+    app.get('/postedJob', (req, res) => {
+        employerPost.find()
+            .toArray((err, documents) => {
+                res.send(documents)
+            })
+    })
+
+    app.post('/jobPost', (req, res) => {
+        const job = req.body;
+        employerPost.insertOne(job)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+    })
+
+
+    app.patch('/updateStatus', (req, res) => {
+        const id = req.body.id;
+        console.log(req.body);
+        employerPost.updateOne({ _id: ObjectId(id) },
+            {
+                $set: { status: req.body.status }
+            })
+            .then(result => {
+                res.send(result.modifiedCount > 0)
+            })
+    })
+
+
+    app.post('/approvedJobs', (req, res) => {
+        const job = req.body;
+        console.log(req.body);
+        approvedJobs.insertOne(job)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+
+    })
+
+    app.get('/publishedJobs', (req, res) => {
+        const search = req.query.search;
+        approvedJobs.find({jobName: {$regex: search}})
+        .toArray((err, documents)=>{
+            res.send(documents);
+        })
+    })
+
+    app.get('/allpublishJobs', (req, res) => {
+        
+        approvedJobs.find()
+        .toArray((err, documents)=>{
+            res.send(documents);
+        })
     })
 
 
